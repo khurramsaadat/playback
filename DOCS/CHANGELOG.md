@@ -75,6 +75,15 @@
 
 ## [2024-03-13]
 
+### Dependency Fixes
+- Fixed package version conflicts:
+  - Locked lucide-react to v0.294.0
+  - Updated Next.js to v14.0.4
+  - Fixed React version to 18.2.0
+  - Updated all dependencies to compatible versions
+  - Added --legacy-peer-deps flag to build command
+  - Set explicit Node.js and npm versions in build environment
+
 ### Build Configuration Updates
 - Added Node.js version management:
   - Created `.nvmrc` file specifying Node.js v20.11.1 (LTS)
