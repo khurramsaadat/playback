@@ -75,6 +75,14 @@
 
 ## [2024-03-13]
 
+### Deployment Fixes
+- Fixed Netlify deployment configuration:
+  - Updated build output directory to `.next`
+  - Added proper Next.js static export configuration
+  - Updated dependencies to compatible versions
+  - Added Netlify configuration file
+  - Fixed build and export settings
+
 ### ESLint Fixes
 - Removed unused imports and functions:
   - Removed unused icon imports
@@ -97,6 +105,9 @@ palyback4/
 │   ├── package.json
 │   ├── tsconfig.json
 │   └── vite.config.ts
+├── netlify.toml
+├── next.config.js
+├── package.json
 └── README.md
 ```
 
