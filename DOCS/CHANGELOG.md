@@ -75,6 +75,12 @@
 
 ## [2024-03-13]
 
+### Build Configuration Updates
+- Added Node.js version management:
+  - Created `.nvmrc` file specifying Node.js v20.11.1 (LTS)
+  - Added `.mise.toml` for explicit version file configuration
+  - Fixed mise deprecation warnings in build process
+
 ### Deployment Fixes
 - Fixed Netlify deployment configuration:
   - Updated build output directory to `.next`
@@ -105,6 +111,8 @@ palyback4/
 │   ├── package.json
 │   ├── tsconfig.json
 │   └── vite.config.ts
+├── .nvmrc
+├── .mise.toml
 ├── netlify.toml
 ├── next.config.js
 ├── package.json
