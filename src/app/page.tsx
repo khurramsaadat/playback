@@ -3,7 +3,6 @@ import { useRef, useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PlayIcon, PauseIcon, BackwardIcon, ForwardIcon } from '@heroicons/react/24/solid';
 import type { ComponentType } from "react";
 import type { WaveSurferComponentProps } from "../components/WaveSurferComponent";
 import { Slider } from "@/components/ui/slider";
@@ -40,47 +39,6 @@ export default function Home() {
   };
 
   // Track play/pause state
-  const handlePlayPause = () => {
-    const video = videoRef.current;
-    if (!video) return;
-    const { a, b } = abMarkers;
-    // Remove any previous looping listeners
-    if (loopingHandlerRef.current) {
-      loopingHandlerRef.current();
-      loopingHandlerRef.current = null;
-    }
-    if (!video.paused) {
-      // Pause and cleanup
-      video.pause();
-      return;
-    }
-    // Play and set up looping if A/B markers are set
-    if (a < b && (a > 0 || b < duration)) {
-      video.currentTime = a;
-      video.play();
-      const onTimeUpdate = () => {
-        if (video.currentTime >= b) {
-          video.currentTime = a;
-          video.play();
-        }
-      };
-      const onPause = () => {
-        video.removeEventListener('timeupdate', onTimeUpdate);
-        video.removeEventListener('pause', onPause);
-      };
-      video.addEventListener('timeupdate', onTimeUpdate);
-      video.addEventListener('pause', onPause);
-      loopingHandlerRef.current = () => {
-        video.removeEventListener('timeupdate', onTimeUpdate);
-        video.removeEventListener('pause', onPause);
-      };
-    } else {
-      video.currentTime = 0;
-      video.play();
-    }
-  };
-
-  // Listen for play/pause events to update isPlaying
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -265,6 +223,7 @@ export default function Home() {
                 accept="video/*,audio/*"
                 onChange={handleFileChange}
                 className="hidden"
+                disabled={isPlaying}
               />
             </label>
             <div className="text-xs text-muted-foreground truncate w-full">
@@ -279,6 +238,7 @@ export default function Home() {
                 src={videoUrl}
                 controls
                 className="w-full h-full object-contain bg-black"
+                onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
               />
             ) : (
               <div className="flex flex-col items-center justify-center w-full h-full text-muted-foreground">
@@ -308,7 +268,7 @@ export default function Home() {
             )}
             {/* Main Controls */}
             <div className="flex flex-row gap-2 w-full justify-center sm:mt-0 mt-2">
-              <Button size="sm" variant="destructive" onClick={() => setAbMarkers({ a: 0, b: duration })} disabled={!audioUrl} aria-label="Clear A/B Markers">
+              <Button size="sm" variant="destructive" onClick={() => setAbMarkers({ a: 0, b: duration })} disabled={!audioUrl || isPlaying} aria-label="Clear A/B Markers">
                 Clear A/B
               </Button>
               {/* Cut & Download Button */}
@@ -329,7 +289,7 @@ export default function Home() {
                   alignItems: 'center',
                   gap: 8,
                 }}
-                disabled={!(abMarkers.a < abMarkers.b && audioUrl) || isCutting}
+                disabled={!(abMarkers.a < abMarkers.b && audioUrl) || isCutting || isPlaying}
                 onClick={handleCutAndDownload}
                 aria-label="Cut & Download"
               >
